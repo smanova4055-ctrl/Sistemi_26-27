@@ -18,12 +18,12 @@
 
      realloc() ha lo scopo di riallocare memoria --> resize di un vettore--> è nient'altro che una realloc,
      passiamo per ref la dimensione e la cambiamo
-     i parametri  p:=realloc(p,5*sizeof(int))--> indirizzo della prima cella, la nuova dimensone
+     i PARAMETRI  p:=realloc(p,5*sizeof(int))--> indirizzo della prima cella, la nuova dimensone
      sono SEMPRE celle continue, senza sovvrascrivere nient'altro
      p potrebbe essere il nuovo indirizzo se le celle non ci stanno
 
      free(p)--> un solo parametro, nella free uso il primo indirizzo e va deallocato--> dice che non serve più
-     e la libera per qualcos'altro --> non è più "proprietà" nostra
+     e la libera per qualcos'altro --> non è più "proprietà" nostra, la rende disponibile
 
      carbage collector è lo spazzino e si rende conto quando un area di memoria non serve più e la libera
     */
@@ -34,6 +34,15 @@ int main (void)
 {
     int v[] = {1, 2, 3, 4, 5}
     int dimA = 5;
+
+    /*
+    int dimA = 5;
+    dim = (int*) malloc(sizeof(int));  dentro dim ho l'indirizzo di dve è stata allocata
+    *dim = 5
+    int *dim;
+    *dim = 5;   NO!
+    dim = 5;
+    */
 
     printf("Array statico di %d elementi \n", dimA)
     stampaVett(v,dimA)
@@ -48,6 +57,14 @@ int main (void)
     /* CALLOC --> calloc(numero celle per tipo, dimensione del singolo elemento/tipo) */
     p = (int*) calloc(numElem,sizeof(int));
     stampaVett(p,numElem);
+
+    /* REALLOC --> realloc(p indirizzo prima cella, nuova dimensone) */
+    numElem = 15;
+    p = realloc(p,numElem * sizeof(int));
+    stampaVett(p,numElem);
+
+    /* FREE --> free(indirizzo) */
+    free(p);
 
     return 0;
 }
