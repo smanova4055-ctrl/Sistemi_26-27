@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
     /* 
     Memoria statica: Stack
@@ -9,10 +10,10 @@
     le celle malloc(sizeof(int)*5) questa funzione ci restituisce un indirizzo che rappresenta il PRIMO indirizzo,
     la memoria allocation richiede un cast dello STESSO tipo (int*) : p:=(int*)malloc(sizeof(int)*5)
     primo parametro numero di elementi che vengono moltiplicati per la sizeof(int), ha sempre il cast
-     p:=(int*)calloc(1,sizeof(int))
-     nella malloc legge il valore sporco
+    p:=(int*)calloc(1,sizeof(int))
+    nella malloc legge il valore sporco
 
-     calloc alloca i 4 byte rivhiesti e inizializza il contenuto con un valore neutro, in questo caso 0
+     calloc alloca i 4 byte richiesti e inizializza il contenuto con un valore neutro, in questo caso 0
      convien usarla quando devi inizializzare a 0
 
      realloc() ha lo scopo di riallocare memoria --> resize di un vettore--> è nient'altro che una realloc,
@@ -37,6 +38,17 @@ int main (void)
     printf("Array statico di %d elementi \n", dimA)
     stampaVett(v,dimA)
 
+    /* ALLOCAZIONE DINAMICA */
+    int numElem = 10;
+    int *p;
+    /* MALLOC --> malloc(numByte) */
+    p = (int*) malloc(sizeof(int) * numElem);
+    stampaVett(p, numElem);
+
+    /* CALLOC --> calloc(numero celle per tipo, dimensione del singolo elemento/tipo) */
+    p = (int*) calloc(numElem,sizeof(int));
+    stampaVett(p,numElem);
+
     return 0;
 }
 
@@ -45,5 +57,5 @@ void stampaVett(int a[], int dim)
 {
     int i;
     for(i=0; 0<dim; i++)
-    printf("v[%d]: %d\n", i, a[i])
+    printf("v[%d]: %d - %p\n", i, a[i],&a[i]);
 }
