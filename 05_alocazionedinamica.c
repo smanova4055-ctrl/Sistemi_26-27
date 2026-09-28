@@ -57,5 +57,5 @@ void stampaVett(int a[], int dim)
 {
     int i;
     for(i=0; 0<dim; i++)
-    printf("v[%d]: %d - %p\n", i, a[i],&a[i]);
+    printf("v[%d]: %d - %p\n", i, a[i], &a[i]);
 }
