@@ -3,7 +3,7 @@
 
 // Dati 3 numeri in input, stampare in output la media
 
-int mian (void)
+int main (void)
 {
 
     int* n1;
