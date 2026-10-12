@@ -8,7 +8,7 @@
     /*
     malloc(sizeof(int))--> riservo un'area di memoria per allocarlo prendo il sizeoff(int) e lo moltiplico per
     le celle malloc(sizeof(int)*5) questa funzione ci restituisce un indirizzo che rappresenta il PRIMO indirizzo,
-    la memoria allocation richiede un cast dello STESSO tipo (int*) : p:=(int*)malloc(sizeof(int)*5)
+    la memoria allocation richiede un cast dello STESSO tipo (int*) : p:=(int*)malloc(sizeof(int)*5), restituisce null se non trova memoria
     primo parametro numero di elementi che vengono moltiplicati per la sizeof(int), ha sempre il cast
     p:=(int*)calloc(1,sizeof(int))
     nella malloc legge il valore sporco
