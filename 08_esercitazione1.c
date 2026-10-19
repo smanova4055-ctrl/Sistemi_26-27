@@ -83,7 +83,7 @@ int main(void)
                 break;
             case 7:
             dimStr = (int*) malloc(sizeof(int));
-            printf("Inserisci dimensione stringa >");
+            printf("Inserisci dimensione stringa > ");
             scanf("%d", dimStr);
             str = (char*) malloc(sizeof(char) * (*dimStr) + 1);
 
@@ -174,5 +174,12 @@ void invertiStringa(char* inizio)
 
 void generaStringaCasuale(char* str, int* dimStr, char min, char max)
 {
-    
+    int * i;
+    i = (int*) malloc(sizeof(int));
+
+    for(*i = 0; *i < *dimStr; (*i)++)
+    {
+        *(str + *i) = ((rand() % (max - min + 1)) + min);
+    }
+
 }
