@@ -174,7 +174,12 @@ void caricaMultipli(int *arr, int *len)
     for (*i = 0; *i < *len; (*i)++)
     {
         if (*(arr + *i) % 3 == 0){
-
+             *(multipli3 + *cont3) = *(arr + *i);
+            (*cont3)++;
+        }
+         if (*(arr + *i) % 5 == 0){
+             *(multipli5 + *cont5) = *(arr + *i);
+            (*cont5)++;
         }
     }
     free(multipli3);
