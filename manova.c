@@ -3,23 +3,25 @@
 #include <time.h>
 #include <string.h>
 
-#define MAX 100
-
 void menu(char *scelta);
 // ES 1
 void caricaCasualeChar(char *str, int *len, char min, char max);
 void stampaArrayChar(char *str, int *len);
-int *contaCharAlfabeto(char *str, int *len);
+int *contaLetterePrimaMeta(char *str, int *len);
 // ES 2
 void caricaCasualeInt(int *arr, int *len, int min, int max);
 void stampaArrayInt(int *arr, int *len);
-void caricaPositiviNegativi(int *arr, int *len);
+void caricaMultipli(int *arr, int *len);
 // ES 3
-void cifrarioCesare(char *str, int *shift);
+void sostituisciConsonanti(char *str);
 
 int main(void)
 {
     char *scelta = (char *)malloc(sizeof(char));
+    char* str;
+    int* len;
+    int* cont;
+    int* arr;
 
     srand(time(NULL));
 
@@ -31,67 +33,69 @@ int main(void)
         case 'a':
         case 'A':
             /*
-            Dato un array di char, caricarlo casualmente con valori compresi tra '!' e '}',
-            stamparlo e contare quanti caratteri dell'alfabeto contiene
+            Generare un array di caratteri il cui range è compreso tra ‘A’-‘Z’ e ‘a’-‘z’. 
+            Contare quante lettere appartengono alla prima metà dell'alfabeto (A-M o a-m)
             */
+            len = (int*)malloc(sizeof(int));
+            do
             {
-                int *charAlfabeto = (int*)malloc(sizeof(int));
-                int *dim = (int*)malloc(sizeof(int));
-                printf("inserisci la dimensione della stringa: \n");
-                scanf("%d", dim);
-                char *s = (char*)malloc(sizeof(char)*(*dim + 1));
-                caricaCasualeChar(s,dim,'!','}');
-                stampaArrayChar(s,dim);
-                charAlfabeto = contaCharAlfabeto(s,dim);
-                printf("Nella stringa i caratteri dell'alfabeto sono: %d\n", *charAlfabeto);
-                free(dim);
-                free(s);
-                free(charAlfabeto);
-            }
+                printf("Inserisci la dimensione del vettore ");
+                scanf("%d", len);
+            } while (*len < 1);
+
+            str = (char*)malloc(sizeof(char) * (*len));
+            caricaCasualeChar(str, len, 'A', 'z');
+            printf("Vettore ");
+            stampaArrayChar(str, len);
+
+            cont = contaLetterePrimaMeta(str, len);
+            printf("Lettere nella prima meta' dell'alfabeto: %d\n", *cont);
+
+            free(cont);
+            free(str);
+            free(len);
             break;
         case 'b':
         case 'B':
             /*
-            Date un array di interi, caricarlo casualmente con valori compresi tra -20 e 20 e stamparlo.
-            Caricare in un array positivi tutti i valori > 0 presenti nell'array originale.
-            Caricare in un array negativi tutti i valori < 0 presenti nell'array originale.
-            Stampare entrambi gli array risultanti.
-            OTTIMIZZARE L'OCCUPAZIONE DI MEMORIA: i due array devono aumentare di dimensione
-            solo quando un valore viene caricato
+            Dato un array di interi, caricarlo casualmente con valori compresi tra 1 e 100.
+            Caricare in un array multipli3 tutti i valori divisibili per 3.
+            Caricare in un array multipli5 tutti i valori divisibili per 5.
+            Stampare entrambi gli array.
+            Attenzione: un numero divisibile sia per 3 che per 5 deve comparire in entrambi gli array.
+            Ottimizzare l'occupazione di memoria.: i due array devono aumentare di dimensione solo quando un valore viene caricato
             */
+            len = (int*)malloc(sizeof(int));
+            do
             {
-                int *dim = (int*)malloc(sizeof(int));
-                printf("inserisci la dimensione del vettore: \n");
-                scanf("%d", dim);
-                int *v = (int*)malloc(sizeof(int)*(*dim));
+                printf("Inserisci la dimensione del vettore ");
+                scanf("%d", len);
+            } while (*len < 1);
 
-                caricaCasualeInt(v,dim,-20,20);
-                printf("vettore: \n");
-                stampaArrayInt(v,dim);
-                caricaPositiviNegativi(v,dim);
-                free(dim);
-                free(v);
-            }
+            arr = (int*)malloc(sizeof(int) * (*len));
+            caricaCasualeInt(arr, len, 1, 100);
+            printf("Vettore casuale: ");
+            stampaArrayInt(arr, len);
+            caricaMultipli(arr, len);
+
+            free(arr);
+            free(len);
             break;
         case 'c':
         case 'C':
             /*
-            Cifrario cesare: data una stringa in input e uno shift,
-            cifrarla spostando ogni carattere dell'alfabeto di shift posizioni.
+            Data una stringa in input, sostituire tutte le consonanti con il carattere *, lasciando invariate le vocali.
+            Es. stringa => “Allocazione dinamica” stringa modificata => “A**o*a*io*e *i*a*i*a”
             */
-            {
-                int *shift = (int*)malloc(sizeof(int));
-                printf("inserisci lo shift: \n");
-                scanf("%d", shift);
-                fflush(stdin);
-                char *s = (char*)malloc(sizeof(char)*(MAX));
-                printf("inserisci la stringa: \n");
-                gets(s);
-                s = realloc(s,sizeof(char)*(strlen(s)+1));
-                *(s+strlen(s)) = '\0';
-                cifrarioCesare(s,shift);
+            str = (char *)malloc(sizeof(char) * MAX);
 
-            }
+            printf("Inserisci una stringa > ");
+            gets(str);
+            str = (char*) realloc(str, sizeof(char) * (strlen(str) + 1));
+
+            sostituisciConsonanti(str);
+            printf("Stringa modificata: %s\n", str);
+            free(str);
             break;
         }
         getchar();
@@ -116,101 +120,79 @@ void menu(char *scelta)
 
 void caricaCasualeChar(char *str, int *len, char min, char max)
 {
-    int* i = (int*)malloc(sizeof(int));
-    for(*i=0; *i<*len; (*i)++){
-        *(str+*i) = (char)(min + rand() % (max - min + 1));
+    // (char)(min + rand() % (max - min + 1));
+    int *i = (int *)malloc(sizeof(int));
+    for (i = str; i < str + *len; i++) {
+            *(str + *i) = (char)(min + rand() % (max - min + 1));     
     }
-    *(str+*len) = '\0';
     free(i);
 }
 void stampaArrayChar(char *str, int *len)
 {
-    int* i = (int*)malloc(sizeof(int));
-    for(*i=0; *i<*len; (*i)++){
-        printf(" %c |",*(str+*i));
-    }
+    int *i = (int *)malloc(sizeof(int));
+    for (*i = 0; *i < *len; (*i)++)
+        printf("%c ", *(str + *i));
     printf("\n");
     free(i);
 }
-int *contaCharAlfabeto(char *str, int *len)
+int *contaLetterePrimaMeta(char *str, int *len)
 {
-    int* i = (int*)malloc(sizeof(int));
-    int* cont = (int*)calloc(1,sizeof(int));
-    for(*i=0; *i<*len; (*i)++){
-        if((*(str+*i)>='a'&&*(str+*i)<='z')||(*(str+*i)>='A'&&*(str+*i)<='Z')){
+    int *cont = (int *)calloc(1, sizeof(int));
+    int *i = (int *)malloc(sizeof(int));
+
+    for (*i = 0; *i < *len; (*i)++)
+        if ((*(str + *i) >= 'A' && *(str + *i) <= 'M') ||
+            (*(str + *i) >= 'a' && *(str + *i) <= 'm'))
             (*cont)++;
-        }
-    }
+
     free(i);
     return cont;
 }
 // ES 2
 void caricaCasualeInt(int *arr, int *len, int min, int max)
 {
-    int* i = (int*)malloc(sizeof(int));
-    for(*i=0; *i<*len; (*i)++){
-        *(arr+*i) = (int)(min + rand() % (max - min + 1));
-    }
+    int *i = (int *)malloc(sizeof(int));
+    for (*i = 0; *i < *len; (*i)++)
+        *(arr + *i) = rand() % (max - min + 1) + min;
     free(i);
 }
 void stampaArrayInt(int *arr, int *len)
 {
-    int* i = (int*)malloc(sizeof(int));
-    for(*i=0; *i<*len; (*i)++){
-        printf(" %d |",*(arr+*i));
-    }
+    int *i = (int *)malloc(sizeof(int));
+    for (*i = 0; *i < *len; (*i)++)
+        printf("%d ", *(arr + *i));
     printf("\n");
     free(i);
 }
-void caricaPositiviNegativi(int *arr, int *len)
+void caricaMultipli(int *arr, int *len)
 {
-    int *pos = (int*)malloc(sizeof(int));
-    int *neg = (int*)malloc(sizeof(int));
-    int *contPos = (int*)calloc(1,sizeof(int));
-    int *contNeg = (int*)calloc(1,sizeof(int));
+    int *i = (int *)malloc(sizeof(int));    
+    int *multipli3 = NULL;
+    int *multipli5 = NULL;
+    int *cont3 = (int *)calloc(1, sizeof(int));
+    int *cont5 = (int *)calloc(1, sizeof(int));
+    for (*i = 0; *i < *len; (*i)++)
+    {
+        if (*(arr + *i) % 3 == 0){
 
-    int* i = (int*)malloc(sizeof(int));
-    for(*i=0; *i<*len; (*i)++){
-        if((*(arr+*i))<0){
-            *(neg+*contNeg) = *(arr+*i);
-            (*contNeg)++;
-            neg = realloc(neg, sizeof(int)*(*(contNeg)+1));
-        }else{
-            *(pos+*contPos) = *(arr+*i);
-            (*contPos)++;
-            pos = realloc(pos, sizeof(int)*(*(contPos)+1));
         }
     }
-    printf("numeri negativi: \n");
-    stampaArrayInt(neg,contNeg);
-    printf("numeri positivi: \n");
-    stampaArrayInt(pos,contPos);
+    free(multipli3);
+    free(multipli5);
+    free(cont3);
+    free(cont5);
     free(i);
-    free(pos);
-    free(neg);
-    free(contPos);
-    free(contNeg);
+
 }
 // ESERCIZIO 3
-void cifrarioCesare(char *str, int *shift)
+void sostituisciConsonanti(char *str)
 {
-    int* i = (int*)calloc(1,sizeof(int));
-    char* c = (char*)malloc(sizeof(char));
-    while(*(str+*i)!='\0'){
-        *c = (char)(*(str+*i) + *shift);
-        if(*c>'Z'){
-          *(str+*i)='A' + (*c-'Z');
-        }
-        *(str+*i)=*c;
-        (*i)++;
+     while (*str != '\0')
+    {
+        if ((*str >= 'a' && *str <= 'z') || (*str >= 'A' && *str <= 'Z'))
+            if (*str != 'a' && *str != 'e' && *str != 'i' && *str != 'o' && *str != 'u' &&
+                *str != 'A' && *str != 'E' && *str != 'I' && *str != 'O' && *str != 'U')
+                *str = '*';
+        str++;
     }
-    (*i)=0;
-    
-    while(*(str+*i)!='\0'){
-        printf("%c", *(str+*i));
-        (*i)++;
-    }
-
-    free(i);
-    free(c);
 }
